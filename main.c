@@ -2,10 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pila.h"
+#include <windows.h>
+
 
 ///CONSTANTES
 int const fila=5;
 int const columna=7;
+
+
+///COLORES PARA PERSONALIZAR
+#define ROJO 12
+#define VERDE 10
+#define AMARILLO 14
+#define MAGENTA 13
+#define CYAN 11
+#define BLANCO 15
 
 ///ESCTRUCTURAS
 typedef struct
@@ -22,7 +33,9 @@ typedef struct
     int documento;
     int dia;
     int mes;
-    float hora;
+    int hora;
+    int minuto;
+
 
 } turnos;
 
@@ -35,9 +48,10 @@ void cargarTurno();
 void opciones(int menu);
 void cargarCalendario(int calendario[][columna], int fila, int columna, int dias);
 void mostrarCalendario(int calendario[][columna], int dias);
-int horario();
+int hora();
+int minutos();
+void inicio();
 void mostrarTurno(int documento);
-
 
 
 
@@ -46,13 +60,8 @@ void mostrarTurno(int documento);
 ///INICIO DEL MAIN
 int main()
 {
-    int matriz [fila][columna];
-    paciente datos;
 
-    int menu=menuPrincipal();
-    opciones(menu);
-
-
+inicio();
 
     return 0;
 }
@@ -61,6 +70,18 @@ int main()
 
 
 ///------------------------------------FUNCIONES---------------------------------------------
+void inicio(){
+    system("cls");
+ int matriz [fila][columna];
+    paciente datos;
+
+    int menu=menuPrincipal();
+    opciones(menu);
+
+
+}
+
+
 int menuPrincipal()
 {
 
@@ -69,10 +90,12 @@ int menuPrincipal()
 
     while(flag==0)
     {
-        printf("------ Menu Principal ------\n");
-        printf("1. Ver turnos disponibles\n");
-        printf("2. Solicitar turno\n");
-        printf("3. Salir\n");
+
+        printf("\t\t\t\t\t|------ Menu Principal ------|\n", color(VERDE));
+        printf("\t\t\t\t\t|1. Ver turnos disponibles   |\n");
+        printf("\t\t\t\t\t|2. Solicitar turno\t     |\n");
+        printf("\t\t\t\t\t|3. Salir\t\t     |\n");
+        printf("\t\t\t\t\t------------------------------\n\n");
         fflush(stdin);
         scanf("%i",&opcion);
         if(opcion==1 || opcion==2 || opcion==3 )
@@ -95,20 +118,17 @@ void opciones(int menu){
      paciente datos;
      int validacion=0;
      char ingresado;
+     int documento;
     switch(menu)
+
     {
     case 1:
-        printf("Usted ya esta ingresado en nuestro sistema (S/N):\n ");
+        system("cls");
+
+        printf("Usted ya esta ingresado en nuestro sistema (S/N):\n ", color(CYAN));
         fflush(stdin);
         scanf("%c", &ingresado);
-
-
-                    int documento;
-
-    printf("Ingrese el número de documento: ");
-    scanf("%d", &documento);
-
-    mostrarTurno(documento);
+       //system("pause");
 
         if (ingresado == 'n')
         {
@@ -118,10 +138,16 @@ void opciones(int menu){
             if(validacion==1){
 
 
+    printf("Ingrese el nÃºmero de documento: ", color(CYAN));
+    scanf("%d", &documento);
+    mostrarTurno(documento);
+
+
+
 
             }
             else{
-                printf("vuelva a ingresar al sistema");
+                printf("vuelva a ingresar al sistema", color(ROJO));
             }
         }
         else if (ingresado == 's')
@@ -129,17 +155,22 @@ void opciones(int menu){
 
           validacion = siEstaIngresado(datos);
            if(validacion==1){
+                printf("Ingrese el nÃºmero de documento: ", color(CYAN));
+    scanf("%d", &documento);
+    mostrarTurno(documento);
+
+
 
 
             }
             else{
-                printf("vuelva a ingresar al sistema");
+                printf("vuelva a ingresar al sistema", color(ROJO));
             }
 
         }
         else
         {
-            printf("Opcion no valida. Por favor, elija una opción correcta.\n");
+            printf("Opcion no valida. Por favor, elija una opciÃ³n correcta.\n", color(ROJO));
 
         }
 
@@ -147,14 +178,15 @@ void opciones(int menu){
         break;
 
     case 2:
-        printf("Usted ya esta ingresado en nuestro sistema (S/N): ");
+        system("cls");
+        printf("Usted ya esta ingresado en nuestro sistema (S/N): ", color(CYAN));
         fflush(stdin);
         scanf("%c", &ingresado);
 
         if (ingresado == 'n')
         {
               noEstaIngresado(datos);
-              printf("inicie sesion con su nueva cuenta \n");
+              printf("inicie sesion con su nueva cuenta \n", color(CYAN));
 
              validacion = siEstaIngresado(datos);
               if(validacion==1){
@@ -163,7 +195,7 @@ void opciones(int menu){
 
             }
             else{
-                printf("vuelva a ingresar al sistema");
+                printf("vuelva a ingresar al sistema", color(ROJO));
             }
 
 
@@ -179,14 +211,14 @@ void opciones(int menu){
 
             }
             else{
-                printf("vuelva a ingresar al sistema");
+                printf("vuelva a ingresar al sistema", color(ROJO));
             }
 
 
         }
         else
         {
-            printf("Opcion no valida. Por favor, elija una opción correcta.\n");
+            printf("Opcion no valida. Por favor, elija una opciÃ³n correcta.\n", color(ROJO));
 
         }
 
@@ -211,20 +243,20 @@ void noEstaIngresado(paciente datos)
     {
         while (eleccion == 's')
         {
-            printf("\nIngrese su DNI: ");
+            printf("\nIngrese su DNI: ", color(CYAN));
             fflush(stdin);
             scanf("%d", &datos.dni);
-            printf("\nIngrese su nombre: ");
+            printf("\nIngrese su nombre: ", color(CYAN));
             fflush(stdin);
             gets(datos.nombre);
-            printf("\nIngrese su genero (M/F): ");
+            printf("\nIngrese su genero (M/F): ", color(CYAN));
             fflush(stdin);
             scanf("%c",&datos.genero);
-            printf("\nIngrese su edad: ");
+            printf("\nIngrese su edad: ", color(CYAN));
             fflush(stdin);
             scanf("%d", &datos.edad);
             fwrite(&datos,sizeof(paciente),1,archivo);
-            printf("\n¿Desea cargar algun otro paciente? (S/N): ");
+            printf("\nÂ¿Desea cargar algun otro paciente? (S/N): ", color(AMARILLO));
             fflush(stdin);
             scanf(" %c", &eleccion);
             i++;
@@ -256,12 +288,12 @@ int siEstaIngresado(paciente datos)
             numPacientes++;
         }
 
-        fclose(archivo);  // Cerrar el archivo después de leer los pacientes
+        fclose(archivo);  // Cerrar el archivo despuÃ©s de leer los pacientes
 
-        // Intentar iniciar sesión hasta 3 intentos o hasta que el documento coincida
+        // Intentar iniciar sesiÃ³n hasta 3 intentos o hasta que el documento coincida
         for (i = 0; i < 3 && !flag; i++)
         {
-            printf("Ingrese su documento para ingresar al sistema\n");
+            printf("Ingrese su documento para ingresar al sistema\n", color(CYAN));
             fflush(stdin);
             scanf("%i", &docu);
 
@@ -270,25 +302,21 @@ int siEstaIngresado(paciente datos)
             {
                 if (pacientes[j].dni == docu)
                 {
-                    printf("------BIENVENIDO------\n");
+                    printf("------BIENVENIDO------\n", color(VERDE));
                     flag = 1;
-
-
-
-
 
                 }
             }
 
             if (!flag)
             {
-                printf("El dato que ingreso es incorrecto, vuelva a intentarlo.\n");
+                printf("El dato que ingreso es incorrecto, vuelva a intentarlo.\n", color(ROJO));
             }
         }
 
         if (i >= 3 && !flag)
         {
-            printf("Ha excedido el número máximo de intentos permitidos.\n");
+            printf("Ha excedido el nÃºmero mÃ¡ximo de intentos permitidos.\n", color(ROJO));
         }
     }
     else
@@ -302,21 +330,21 @@ void areas ()
 {
     int opc;
 
-    printf("1. Pediatria\t\t 2. Traumatologia\t\t 3. Cardiologia\n");
+    printf("1. Pediatria\t\t 2. Traumatologia\t\t 3. Cardiologia\n", color(VERDE));
     printf("4. Dermatologia \t\t 5. Oftalmologia\t\t 6. Urologia\n");
     printf("7. Oncologia\t\t 8. Alergia e Inmunologia\t 9. Cirugia\n");
 
-    printf("\nIngrese el numero de la especialidad que desea sacar turno: ");
+    printf("Ingrese el numero de la especialidad que desea sacar turno: ");
     scanf("%d", &opc);
 
     switch (opc)
     {
     case 1:
-        printf("Estos son los días disponibles\n");
+        printf("Estos son los dÃ­as disponibles\n");
         cargarTurno();
         break;
     case 2:
-        printf("Estos son los dias disponibles.\n\n");
+        printf("Estos son los dias disponibles.\n");
         cargarTurno();
         break;
     case 3:
@@ -348,7 +376,7 @@ void areas ()
         cargarTurno();
         break;
     default:
-        printf("Opcion no válida. Por favor, elija una opcion correcta.\n");
+        printf("Opcion no vÃ¡lida. Por favor, elija una opcion correcta.\n");
         cargarTurno();
         break;
     }
@@ -356,34 +384,41 @@ void areas ()
 }
 
 void cargarTurno(){
+    char eleccion1;
+
     turnos turno;
     char eleccion='s';
+    int minuto1=0;
+    int hora1=0;
     FILE *archivo2;
     archivo2=fopen("turno.bin","ab");
     if(archivo2!=NULL){
         while(eleccion=='s'){
           turno.mes = calendario();
-//            printf("ingrese el mes en el que desea atenderse");
-//            fflush(stdin);
-//            scanf("%i",&turno.mes);
-            printf("ingrese el dia en el que quiere atenderse \n");
+            printf("ingrese el dia en el que quiere atenderse: \n");
             fflush(stdin);
             scanf("%i",&turno.dia);
-            horario();
-//            printf("elija su horario");
-//            fflush(stdin);
-//            scanf("%f",&turno.hora);
-            printf("ingrese su documento para confirmar el turno, no nos hacemos responsables si lo ingresa mal \n");
+            hora1=hora();
+            turno.hora=hora1;
+             minuto1=minutos();
+            turno.minuto=minuto1;
+            printf("El horario elegido es: %i:%i \n\n", hora1, minuto1);
+            printf("vuelva a ingresar su documento para confimar su turno:\n");
             fflush(stdin);
             scanf("%i",&turno.documento);
             fwrite(&turno,sizeof(turnos),1,archivo2);
-            printf("¿desea seguir cargando mas turnos?S/N");
+            printf("Â¿desea seguir cargando mas turno?S/N\n");
             fflush(stdin);
             scanf("%c",&eleccion);
             }
             fclose(archivo2);
 }
-
+            printf("Desea volver al menu principal?");
+            fflush(stdin);
+            scanf("%c", &eleccion1);
+            if (eleccion1=='s'){
+                inicio();
+            }
 }
 
 
@@ -505,97 +540,143 @@ void mostrarCalendario(int calendario[][columna], int dias)
 }
 
 
-int horario(){
+int hora(){
 
     int i=8;
-    int j=0;
+
     int hora;
-    int minuto;
+    int flag=0;
+
 
     Pila horas;
-    Pila minutos;
+
 
     inicpila(&horas);
-    inicpila(&minutos);
+
 
     while(i<21)
     {
         apilar(&horas, i);
         i++;
     }
-    while(j<60)
+
+
+    while(flag==0){
+             printf("\nHoras: \n");
+    mostrar(&horas);
+
+
+    printf("Elija la hora: \n");
+    fflush(stdin);
+    scanf("%i", &hora);
+         if  (hora<8 || hora>20)
+    {
+        printf("El horario no es valido");
+    }
+    else{
+        flag=1;
+    }
+    }
+
+
+
+
+
+     return hora;
+
+}
+int minutos(){
+int j=0;
+int minuto;
+int flag=0;
+ Pila minutos;
+ inicpila(&minutos);
+ while(j<60)
     {
         apilar(&minutos, j);
         j=j+15;
     }
-    printf("\nHoras: ");
-    mostrar(&horas);
 
 
-    printf("Elija la hora: ");
-    fflush(stdin);
-    scanf("%i", &hora);
-    if  (hora<8 || hora>20)
-    {
-        printf("El horario no es valido");
-    }
-    else
-    {
-        printf("\nMinutos: ");
+
+        while(flag==0){
+                printf("\nMinutos: ");
         mostrar(&minutos);
-
-        printf("Elija el minuto: ");
+                printf("Elija el minuto: \n");
         fflush(stdin);
         scanf("%i", &minuto);
-        if (minuto!=0 && minuto!=15 && minuto!=30 && minuto!=45)
+           if (minuto!=0 && minuto!=15 && minuto!=30 && minuto!=45)
         {
             printf("Ese minuto no es valido \n");
         }
-        else
-        {
-            printf("El horario elegido es: %i:%i \n\n", hora, minuto);
+         else{
+            flag=1;
+
+
+         }
+
         }
-    }
+
+return minuto;
+
 }
 
 
 void mostrarTurno(int documento)
 {
     turnos turno;
+    char eleccion;
 
     FILE *archivo;
     archivo = fopen("turno.bin", "rb");
     if (archivo != NULL)
     {
-        // Leer los turnos del archivo y buscar el turno correspondiente al documento
-        while (fread(&turno, sizeof(turnos), 1, archivo) == 1)
+
+        system("cls");
+        while(!feof(archivo))
+            { // Leer los turnos del archivo y buscar el turno correspondiente al documento
+            while ( fread(&turno, sizeof(turnos), 1, archivo) == 1)
         {
             if (turno.documento == documento)
             {
-                printf("Turno encontrado:\n");
+               printf("------------------------------\n");
+               printf("Turno encontrado:\n");
                 printf("Mes: %d\n", turno.mes);
                 printf("Dia: %d\n", turno.dia);
-                printf("Hora: %.2f\n", turno.hora);
-                fclose(archivo);
-                return;
+                printf("Hora: %i:%i\n", turno.hora,turno.minuto);
+
+                printf("------------------------------\n");
+                system("pause");
+
+
             }
         }
 
-        fclose(archivo);  // Cerrar el archivo después de buscar el turno
+        }
+
+
+
+        fclose(archivo);  // Cerrar el archivo despuÃ©s de buscar el turno
     }
     else
     {
         printf("No se pudo abrir el archivo de turnos.\n");
     }
 
-    // Si se llega a este punto, significa que no se encontró el turno
-    printf("No se encontró un turno para el documento ingresado.\n");
+    // Si se llega a este punto, significa que no se encontrÃ³ el turno
+    printf("No se encontro otro turno para el documento ingresado.\n");
+    printf("Desea volver al menu? S/N");
+    fflush(stdin);
+    scanf("%c",&eleccion);
+    if (eleccion=='s'){
+        inicio();
+    }
+
 }
-
-
-
-
-
-
+void color(int color)
+{
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+SetConsoleTextAttribute(hConsole, color);
+}
 
 
